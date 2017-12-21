@@ -27,6 +27,7 @@ ST = Shanghai
 L = Shanghai
 O = Wanda., Ltd
 OU = wandayun
+CN = ${MASTER_CLUSTER_IP}
     
 [ req_ext ]
 subjectAltName = @alt_names
