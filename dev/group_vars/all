@@ -3,14 +3,15 @@
 timezone: Asia/Shanghai
 domain_name: example.com
 ntp_server: 192.168.130.254
+centos7_yum_url: http://192.168.130.1/ftp/centos7
+docker_yum_url: http://192.168.130.1/ftp/linux_soft/yum/docker
 
 # etcd vars
 etcd_version: v3.2.7
 etcd_bin_tar_url: http://192.168.130.1/ftp/linux_soft/k8s
 
 # calico vars
-centos7_yum_url: http://192.168.130.1/ftp/centos7
-docker_yum_url: http://192.168.130.1/ftp/linux_soft/yum/docker
+calico_ipv4pool_cidr: 10.1.0.0/16
 
 # docker vars
 docker_registry: 192.168.130.1:5000
@@ -19,6 +20,7 @@ kube_hyperkube_image: "{{ docker_registry }}/google_containers/hyperkube:v1.7.4"
 pod_infra_container_image: "{{ docker_registry }}/google_containers/pause-amd64:3.0"
 
 # k8s vars
+service_cluster_ip_range: 10.96.0.0/12
 kubernetes_version: v1.7
 kubernetes_binary_url: http://192.168.130.1/ftp/linux_soft/k8s/{{ kubernetes_version }}
 kubernetes_master_cluster_ip: 192.168.130.11
