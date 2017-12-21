@@ -1,0 +1,24 @@
+[all:vars]
+ansible_user=root
+ansible_ssh_private_key_file=~/.ssh/id_rsa   
+
+[etcd-node]
+node1 ansible_hostname=node1 ansible_host=192.168.130.11
+node2 ansible_hostname=node2 ansible_host=192.168.130.12
+node3 ansible_hostname=node3 ansible_host=192.168.130.13
+
+[kubelet-node]
+node1 ansible_hostname=node1 ansible_host=192.168.130.11
+node2 ansible_hostname=node2 ansible_host=192.168.130.12
+
+[kubernetes-master]
+node1 ansible_hostname=node1 ansible_host=192.168.130.11
+node2 ansible_hostname=node2 ansible_host=192.168.130.12
+
+[kubernetes-worker]
+node1 ansible_hostname=node1 ansible_host=192.168.130.11
+node2 ansible_hostname=node2 ansible_host=192.168.130.12
+
+[kubernetes-client]
+node1 ansible_hostname=node1 ansible_host=192.168.130.11
+node2 ansible_hostname=node2 ansible_host=192.168.130.12

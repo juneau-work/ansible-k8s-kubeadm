@@ -1,0 +1,60 @@
+---
+- name: download kubelet MD5
+  get_url:
+    url: "{{ kubernetes_binary_url }}/kubelet.MD5"
+    dest: /tmp
+
+- name: check md5
+  shell: "[ $(md5sum /usr/bin/kubelet 2>/dev/null|awk '{print $1}') == $(cat /tmp/kubelet.MD5) ]"
+  register: md5_result
+  ignore_errors: true
+
+- debug:
+    msg: "{{ md5_result }}"
+
+- name: fetch kubelet binary to PATH(/usr/bin)
+  get_url:
+    url: "{{ kubernetes_binary_url }}/kubelet"
+    dest: /usr/bin
+    owner: root
+    group: root
+    mode: 0755
+  notify: restart kubelet
+  when: md5_result.rc != 0
+
+- name: create kubernetes-worker directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - /etc/kubernetes/manifests
+    - /etc/kubernetes/pki
+    - /etc/systemd/system/kubelet.service.d
+    - /var/lib/kubelet/plugins
+    - /var/lib/kubelet/pods
+
+- name: create kubernetes-worker configuration
+  template: 
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - { src: 'kubelet.service', dest: '/etc/systemd/system/kubelet.service' }
+    - { src: '10-kubeadm.conf', dest: '/etc/systemd/system/kubelet.service.d/10-kubeadm.conf' }
+    - { src: '20-pod-infra-image.conf', dest: '/etc/systemd/system/kubelet.service.d/20-pod-infra-image.conf' }
+  notify: restart kubelet
+   
+- name: systemd daemon-reload
+  systemd:
+    daemon-reload: yes
+
+- name: start kubelet
+  service: 
+    name: kubelet
+    state: started 
+    enabled: yes

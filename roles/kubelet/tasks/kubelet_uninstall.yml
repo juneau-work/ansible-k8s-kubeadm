@@ -1,0 +1,21 @@
+---
+- name: stop kubelet 
+  service: 
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  with_items: 
+    - kubelet
+  ignore_errors: true
+
+- name: remove kubelet directories & configurations
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /tmp/kubelet.MD5
+    - /usr/bin/kubelet
+    - /etc/kubernetes
+    - /etc/systemd/system/kubelet.service.d
+    - /etc/systemd/system/kubelet.service
+    - /var/lib/kubelet

@@ -1,0 +1,8 @@
+---
+- name: remove kubectl
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /tmp/kubectl.MD5
+    - /usr/bin/kubectl

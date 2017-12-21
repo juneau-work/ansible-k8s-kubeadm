@@ -1,0 +1,22 @@
+---
+- name: download kubectl MD5
+  get_url:
+    url: "{{ kubernetes_binary_url }}/kubectl.MD5"
+    dest: /tmp
+
+- name: check md5
+  shell: "[ $(md5sum /usr/bin/kubectl|awk '{print $1}') == $(cat /tmp/kubectl.MD5) ]"
+  register: md5_result
+  ignore_errors: true
+
+- debug:
+    msg: "{{ md5_result }}"
+
+- name: fetch kubectl binary to PATH(/usr/bin)
+  get_url:
+    url: "{{ kubernetes_binary_url }}/kubectl"
+    dest: /usr/bin
+    owner: root
+    group: root
+    mode: 0755
+  when: md5_result.rc != 0

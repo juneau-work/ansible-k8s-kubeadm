@@ -1,0 +1,55 @@
+---
+# common vars
+timezone: Asia/Shanghai
+domain_name: example.com
+ntp_server: 192.168.130.254
+
+# etcd vars
+etcd_version: v3.2.7
+etcd_bin_tar_url: http://192.168.130.1/ftp/linux_soft/k8s
+
+# calico vars
+calico_cni_binary_url: http://192.168.130.1/ftp/linux_soft/k8s/calico
+calico_ipv4pool_cidr: 10.1.0.0/16
+centos7_yum_url: http://192.168.130.1/ftp/centos7
+docker_yum_url: http://192.168.130.1/ftp/linux_soft/yum/docker
+
+# docker vars
+docker_registry: 192.168.130.1:5000
+pod_infra_container_image: "{{ docker_registry }}/google_containers/pause-amd64:3.0"
+calico_node_image: "{{ docker_registry }}/calico/node:v2.6.1"
+calico_policy_controller_image: "{{ docker_registry }}/calico/kube-policy-controller:v0.7.0"
+kubernetes_dashboard_image: "{{ docker_registry }}/google_containers/kubernetes-dashboard-amd64:v1.7.1"
+influxdb_image: "{{ docker_registry }}/google_containers/heapster-influxdb-amd64:v1.3.3"
+grafana_image: "{{ docker_registry }}/google_containers/heapster-grafana-amd64:v4.4.3"
+heapster_image: "{{ docker_registry }}/google_containers/heapster-amd64:v1.4.0"
+kubedns_image: "{{ docker_registry }}/google_containers/kubedns-amd64:1.9"
+kube_dnsmasq_image: "{{ docker_registry }}/google_containers/kube-dnsmasq-amd64:1.4.1"
+dnsmasq_metrics_image: "{{ docker_registry }}/google_containers/dnsmasq-metrics-amd64:1.0"
+healthz_image: "{{ docker_registry }}/google_containers/exechealthz-amd64:1.2"
+defaultbackend_image: "{{ docker_registry }}/google_containers/defaultbackend:1.4"
+nginx_ingress_controller_image: "{{ docker_registry }}/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0-beta.19"
+
+# k8s vars
+etcd_servers: http://192.168.130.11:2379,http://192.168.130.12:2379,http://192.168.130.13:2379
+kubernetes_version: v1.7
+kubernetes_binary_url: http://192.168.130.1/ftp/linux_soft/k8s/{{ kubernetes_version }}
+kubernetes_apiserver: http://192.168.130.100:8080
+
+# haproxy vars
+haproxy_k8s_apiserver_port: 8080
+k8s_apiserver_port: 8080
+haproxy_balance: roundrobin
+
+# keepalived vars
+keepalived_interface: ens33
+keepalived_vip: 192.168.130.100/24 brd 192.168.130.255 dev {{ keepalived_interface }}
+
+# sensitive
+vault_the_dev_secret: !vault |
+          $ANSIBLE_VAULT;1.2;AES256;dev
+          64343039636439656265393737373261396236363438336432663131353537303561343732343133
+          6661393835653966623031656131356262313362383465330a346263306136343366656133393961
+          34333931353532663764346162663564663465316332326162333632313137643737316131376239
+          3663323864316238360a363238373838306663616664633766396636323131363031386138363738
+          3633

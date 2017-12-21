@@ -1,0 +1,17 @@
+[all:vars]
+ansible_user=admin   
+ansible_ssh_private_key_file=~/.ssh/id_rsa   
+ansible_become=true   
+ansible_become_method=sudo   
+ansiblie_become_user=root   
+ansible_become_pass={{ vault_the_dev_secret }}
+
+[etcd-node]
+node1 ansible_hostname=node1 ansible_host=192.168.130.11
+node2 ansible_hostname=node2 ansible_host=192.168.130.12
+node3 ansible_hostname=node3 ansible_host=192.168.130.13
+
+[kubelet-node]
+node1 ansible_hostname=node1 ansible_host=192.168.130.11
+node2 ansible_hostname=node2 ansible_host=192.168.130.12
+node3 ansible_hostname=node3 ansible_host=192.168.130.13

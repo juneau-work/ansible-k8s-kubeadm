@@ -1,0 +1,25 @@
+---
+# common vars
+timezone: Asia/Shanghai
+domain_name: example.com
+ntp_server: 192.168.130.254
+
+# etcd vars
+etcd_version: v3.2.7
+etcd_bin_tar_url: http://192.168.130.1/ftp/linux_soft/k8s
+
+# calico vars
+centos7_yum_url: http://192.168.130.1/ftp/centos7
+docker_yum_url: http://192.168.130.1/ftp/linux_soft/yum/docker
+
+# docker vars
+docker_registry: 192.168.130.1:5000
+kube_repo_prefix: "{{ docker_registry }}/google_containers"
+kube_hyperkube_image: "{{ docker_registry }}/google_containers/hyperkube:v1.7.4"
+pod_infra_container_image: "{{ docker_registry }}/google_containers/pause-amd64:3.0"
+
+# k8s vars
+kubernetes_version: v1.7
+kubernetes_binary_url: http://192.168.130.1/ftp/linux_soft/k8s/{{ kubernetes_version }}
+kubernetes_master_cluster_ip: 192.168.130.11
+kubernetes_apiserver: https://{{ kubernetes_master_cluster_ip }}:6443

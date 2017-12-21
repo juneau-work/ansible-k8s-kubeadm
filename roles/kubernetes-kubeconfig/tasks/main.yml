@@ -1,0 +1,3 @@
+---
+- import_tasks: kubernetes_kubeconfig_{{ install_or_uninstall }}.yml
+  tags: kubernetes_kubeconfig

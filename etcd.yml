@@ -1,0 +1,8 @@
+---
+- name: etcd
+  hosts: 
+    - etcd-node
+  roles:
+    - etcd
+  vars_files:
+    - dev/group_vars/all
