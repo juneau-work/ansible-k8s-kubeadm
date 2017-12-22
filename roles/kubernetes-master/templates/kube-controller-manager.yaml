@@ -20,12 +20,13 @@ spec:
     - --controllers=*,bootstrapsigner,tokencleaner
     - --root-ca-file=/etc/kubernetes/pki/ca.crt
     - --use-service-account-credentials=true
-    - --kubeconfig=/etc/kubernetes/controller-manager.conf
-    - --service-account-private-key-file=/etc/kubernetes/pki/apiserver.key
+    - --kubeconfig=/etc/kubernetes/kubeconfig
+    - --service-account-private-key-file=/etc/kubernetes/pki/server.key
     - --cluster-signing-key-file=/etc/kubernetes/pki/ca.key
     - --allocate-node-cidrs=true
-    - --cluster-cidr=10.244.0.0/16
-    image: "{{ kube_hyperkube_image }}"
+    - --cluster-cidr={{ calico_ipv4pool_cidr }}
+    - --leader-elect
+    image: {{ kube_hyperkube_image }}
     livenessProbe:
       failureThreshold: 8
       httpGet:

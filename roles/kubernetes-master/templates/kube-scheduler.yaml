@@ -16,7 +16,7 @@ spec:
     - scheduler
     - --address=127.0.0.1
     - --leader-elect=true
-    - --kubeconfig=/etc/kubernetes/scheduler.conf
+    - --kubeconfig=/etc/kubernetes/kubeconfig
     image: "{{ kube_hyperkube_image }}"
     livenessProbe:
       failureThreshold: 8

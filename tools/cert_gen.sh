@@ -4,16 +4,20 @@ if [ -z "${MASTER_CLUSTER_IP}" ];then
 	echo "bash $0"
 	exit 1
 fi
-mkdir -p roles/kubernetes-kubeconfig/files/pki
-cd roles/kubernetes-kubeconfig/files/pki
+
+CERT_DIR=roles/kubernetes-kubeconfig/files/pki
+mkdir -p $CERT_DIR
+
+echo $(dd if=/dev/urandom bs=128 count=1 2>/dev/null | base64 | tr -d "=+/" | dd bs=32 count=1 2>/dev/null),kube-admin,1 > $CERT_DIR/known_tokens.csv
+echo PASS,kube-admin,1 > $CERT_DIR/basic_auth.csv
 
 # i.ca
-openssl genrsa -out ca.key 2048
-openssl req -x509 -new -nodes -key ca.key -subj "/CN=${MASTER_CLUSTER_IP}" -days 10000 -out ca.crt
+openssl genrsa -out $CERT_DIR/ca.key 2048
+openssl req -x509 -new -nodes -key $CERT_DIR/ca.key -subj "/CN=${MASTER_CLUSTER_IP}" -days 10000 -out $CERT_DIR/ca.crt
 
-# ii.apiserver
-openssl genrsa -out apiserver.key 2048
-cat >csr.conf <<EOF
+# ii.server
+openssl genrsa -out $CERT_DIR/server.key 2048
+cat >$CERT_DIR/csr.conf <<EOF
 [ req ]
 default_bits = 2048
 prompt = no
@@ -50,8 +54,6 @@ extendedKeyUsage=serverAuth,clientAuth
 subjectAltName=@alt_names
 EOF
 
-openssl req -new -key apiserver.key -out apiserver.csr -config csr.conf
-openssl x509 -req -in apiserver.csr -CA ca.crt -CAkey ca.key \
--CAcreateserial -out apiserver.crt -days 10000 \
--extensions v3_ext -extfile csr.conf
-openssl x509 -noout -text -in apiserver.crt
+openssl req -new -key $CERT_DIR/server.key -out $CERT_DIR/server.csr -config $CERT_DIR/csr.conf
+openssl x509 -req -in $CERT_DIR/server.csr -CA $CERT_DIR/ca.crt -CAkey $CERT_DIR/ca.key -CAcreateserial -out $CERT_DIR/server.crt -days 10000 -extensions v3_ext -extfile $CERT_DIR/csr.conf
+openssl x509 -noout -text -in $CERT_DIR/server.crt

@@ -1,14 +1,11 @@
 #!/bin/bash
 export APISERVER=$1
 export SSL_PATH=/etc/kubernetes/pki
+export KUBECONFIG_PATH=/etc/kubernetes/kubeconfig
 export CLUSTER_NICK=kubernetes
-
-# kubelet.conf
-export KUBECONFIG_PATH=/etc/kubernetes/kubelet.conf
-export USER_NICK=system:node:$HOSTNAME
+export USER_NICK=kubelet
 export CONTEXT=$USER_NICK@$CLUSTER_NICK
 
-kubeconfig_gen(){
 # Cluster
 kubectl config set-cluster $CLUSTER_NICK \
     --server=$APISERVER \
@@ -17,8 +14,8 @@ kubectl config set-cluster $CLUSTER_NICK \
     --kubeconfig=$KUBECONFIG_PATH
 # User
 kubectl config set-credentials $USER_NICK \
-    --client-certificate=$SSL_PATH/apiserver.crt \
-    --client-key=$SSL_PATH/apiserver.key \
+    --client-certificate=$SSL_PATH/server.crt \
+    --client-key=$SSL_PATH/server.key \
     --embed-certs=true \
     --kubeconfig=$KUBECONFIG_PATH
 # Context
@@ -29,23 +26,3 @@ kubectl config set-context $CONTEXT \
 # Switched to context
 kubectl config use-context $CONTEXT \
     --kubeconfig=$KUBECONFIG_PATH
-}
-kubeconfig_gen
-    
-# controller-manager.conf
-export KUBECONFIG_PATH=/etc/kubernetes/controller-manager.conf
-export USER_NICK=system:kube-controller-manager
-export CONTEXT=$USER_NICK@$CLUSTER_NICK
-kubeconfig_gen
-
-# scheduler.conf
-export KUBECONFIG_PATH=/etc/kubernetes/scheduler.conf
-export USER_NICK=system:kube-scheduler
-export CONTEXT=$USER_NICK@$CLUSTER_NICK
-kubeconfig_gen
-
-# admin.conf
-export KUBECONFIG_PATH=/etc/kubernetes/admin.conf
-export USER_NICK=kubernetes-admin
-export CONTEXT=$USER_NICK@$CLUSTER_NICK
-kubeconfig_gen

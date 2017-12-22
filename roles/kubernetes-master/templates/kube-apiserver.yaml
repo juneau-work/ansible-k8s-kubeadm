@@ -14,29 +14,18 @@ spec:
   - command:
     - /hyperkube
     - apiserver
-    - --proxy-client-key-file=/etc/kubernetes/pki/apiserver.key
-    - --experimental-bootstrap-token-auth=true
-    - --requestheader-username-headers=X-Remote-User
-    - --requestheader-allowed-names=apiserver
-    - --service-cluster-ip-range={{ service_cluster_ip_range }}
-    - --service-account-key-file=/etc/kubernetes/pki/apiserver.key
-    - --client-ca-file=/etc/kubernetes/pki/ca.crt
-    - --tls-cert-file=/etc/kubernetes/pki/apiserver.crt
-    - --allow-privileged=true
-    - --requestheader-group-headers=X-Remote-Group
-    - --requestheader-extra-headers-prefix=X-Remote-Extra-
-    - --kubelet-client-certificate=/etc/kubernetes/pki/apiserver.crt
-    - --secure-port=6443
-    - --requestheader-client-ca-file=/etc/kubernetes/pki/apiserver.crt
-    - --insecure-port=0
-    - --admission-control=Initializers,NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,DefaultTolerationSeconds,NodeRestriction,ResourceQuota
-    - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
-    - --tls-private-key-file=/etc/kubernetes/pki/apiserver.key
-    - --kubelet-client-key=/etc/kubernetes/pki/apiserver.key
-    - --proxy-client-cert-file=/etc/kubernetes/pki/apiserver.crt
-    - --authorization-mode=Node,RBAC
     - --advertise-address=0.0.0.0
+    - --secure-port=6443 
     - --etcd-servers={% for item in groups['etcd-node'] %}http://{{ hostvars[item]['ansible_host'] }}:2379{% if not loop.last %},{% endif %}{% endfor %} 
+    - --admission-control=Initializers,NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,DefaultTolerationSeconds,NodeRestriction,ResourceQuota
+    - --service-cluster-ip-range={{ service_cluster_ip_range }}
+    - --client-ca-file=/etc/kubernetes/pki/ca.crt
+    - --basic-auth-file=/etc/kubernetes/pki/basic_auth.csv 
+    - --token-auth-file=/etc/kubernetes/pki/known_tokens.csv  
+    - --tls-cert-file=/etc/kubernetes/pki/server.crt 
+    - --tls-private-key-file=/etc/kubernetes/pki/server.key
+    - --allow-privileged=true
+    - --v=2
     image: {{ kube_hyperkube_image }}
     livenessProbe:
       failureThreshold: 8
@@ -59,6 +48,8 @@ spec:
       name: certs
     - mountPath: /etc/pki
       name: pki
+    - mountPath: /var/log/kube-apiserver.log
+      name: logfile
   hostNetwork: true
   volumes:
   - hostPath:
@@ -70,4 +61,7 @@ spec:
   - hostPath:
       path: /etc/pki
     name: pki
+  - hostPath:
+      path: /var/log/kube-apiserver.log
+    name: logfile
 status: {}
