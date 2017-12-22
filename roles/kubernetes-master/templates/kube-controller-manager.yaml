@@ -25,7 +25,7 @@ spec:
     - --cluster-signing-key-file=/etc/kubernetes/pki/ca.key
     - --allocate-node-cidrs=true
     - --cluster-cidr={{ calico_ipv4pool_cidr }}
-    - --leader-elect
+    - --leader-elect=true
     image: {{ kube_hyperkube_image }}
     livenessProbe:
       failureThreshold: 8
