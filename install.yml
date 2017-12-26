@@ -3,7 +3,3 @@
 - import_playbook: ntp.yml
 - import_playbook: etcd.yml
 - import_playbook: docker.yml
-- import_playbook: kubelet.yml
-- import_playbook: kubernetes-client.yml
-- import_playbook: kubernetes-kubeconfig.yml
-- import_playbook: kubernetes-master.yml

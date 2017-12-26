@@ -5,7 +5,7 @@
     dest: /tmp
 
 - name: check md5
-  shell: "[ $(md5sum /usr/bin/kubelet 2>/dev/null|awk '{print $1}') == $(cat /tmp/kubelet.MD5) ]"
+  shell: "[ $(md5sum /usr/bin/kubelet|awk '{print $1}') == $(cat /tmp/kubelet.MD5) ]"
   register: md5_result
   ignore_errors: true
 
@@ -20,7 +20,7 @@
     group: root
     mode: 0755
   notify: restart kubelet
-  when: md5_result.rc != 0
+  when: md5_result.stderr 
 
 - name: create kubernetes-worker directory
   file:

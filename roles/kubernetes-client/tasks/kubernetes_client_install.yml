@@ -19,4 +19,4 @@
     owner: root
     group: root
     mode: 0755
-  when: md5_result.rc != 0
+  when: md5_result.stderr

@@ -21,7 +21,7 @@ pod_infra_container_image: "{{ docker_registry }}/google_containers/pause-amd64:
 
 # k8s vars
 service_cluster_ip_range: 10.96.0.0/12
-kubernetes_version: v1.7
+kubernetes_version: v1.9
 kubernetes_binary_url: http://192.168.130.1/ftp/linux_soft/k8s/{{ kubernetes_version }}
 kubernetes_master_cluster_ip: 192.168.130.11
 kubernetes_apiserver: https://{{ kubernetes_master_cluster_ip }}:6443

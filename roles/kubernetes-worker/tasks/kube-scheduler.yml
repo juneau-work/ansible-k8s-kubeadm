@@ -1,0 +1,8 @@
+---
+- name: create kube-scheduler
+  template: 
+    src: kube-scheduler.yaml
+    dest: /etc/kubernetes/manifests/kube-scheduler.yaml
+    owner: root
+    group: root
+    mode: 0644
