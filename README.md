@@ -2,7 +2,7 @@
 ### 主机列表: dev/hosts ###
 ### 安装:  ###
 ```
-export MASTER_CLUSTER_IP=192.168.130.11
+export MASTER_CLUSTER_IP=https://192.168.130.11:443
 bash tools/cert_gen.sh
 
 action=install ; ansible-playbook -i dev/hosts $action.yml --extra-vars install_or_uninstall=$action
