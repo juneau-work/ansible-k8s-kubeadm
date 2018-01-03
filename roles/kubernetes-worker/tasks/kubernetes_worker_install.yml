@@ -1,7 +1,14 @@
 ---
-- import_tasks: kube-apiserver.yml
-  tags: kube-apiserver
-- import_tasks: kube-controller-manager.yml
-  tags: kube-controller-manager
-- import_tasks: kube-scheduler.yml
-  tags: kube-scheduler
+- name: remove useless certs
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /etc/kubernetes/pki/basic_auth.csv
+    - /etc/kubernetes/pki/ca.key
+    - /etc/kubernetes/pki/ca.srl
+    - /etc/kubernetes/pki/csr.conf
+    - /etc/kubernetes/pki/known_tokens.csv
+    - /etc/kubernetes/pki/server.crt
+    - /etc/kubernetes/pki/server.csr
+    - /etc/kubernetes/pki/server.key

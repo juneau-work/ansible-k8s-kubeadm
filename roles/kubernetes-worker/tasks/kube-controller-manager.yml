@@ -1,8 +1,0 @@
----
-- name: create kube-controller-manager
-  template: 
-    src: kube-controller-manager.yaml
-    dest: /etc/kubernetes/manifests/kube-controller-manager.yaml
-    owner: root
-    group: root
-    mode: 0644

@@ -1,3 +1,0 @@
----
-- import_tasks: kubernetes_kubeadm_{{ install_or_uninstall }}.yml
-  tags: kubernetes_kubeadm

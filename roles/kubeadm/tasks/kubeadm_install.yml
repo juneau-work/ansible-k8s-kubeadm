@@ -5,7 +5,7 @@
     dest: /tmp
 
 - name: check md5
-  shell: "[ $(md5sum /usr/bin/kubeadm|awk '{print $1}') == $(cat /tmp/kubeadm.MD5) ]"
+  shell: "[[ \"$(md5sum /usr/bin/kubeadm|awk '{print $1}')\" == \"$(cat /tmp/kubeadm.MD5)\" ]]"
   register: md5_result
   ignore_errors: true
 
@@ -19,4 +19,4 @@
     owner: root
     group: root
     mode: 0755
-  when: md5_result.stderr
+  when: md5_result.rc != 0

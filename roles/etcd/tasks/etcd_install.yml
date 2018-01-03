@@ -17,7 +17,7 @@
     dest: /tmp
 
 - name: check md5
-  shell: "[ \"$(md5sum /tmp/etcd-{{ etcd_version }}-linux-amd64.tar.gz 2>/dev/null|awk '{print $1}')\" == \"$(cat /tmp/etcd-{{ etcd_version }}-linux-amd64.tar.gz.MD5)\" ]"
+  shell: "[[ \"$(md5sum /tmp/etcd-{{ etcd_version }}-linux-amd64.tar.gz|awk '{print $1}')\" == \"$(cat /tmp/etcd-{{ etcd_version }}-linux-amd64.tar.gz.MD5)\" ]]"
   register: md5_result
   ignore_errors: true
 

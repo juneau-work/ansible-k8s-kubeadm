@@ -16,7 +16,7 @@ calico_ipv4pool_cidr: 10.1.0.0/16
 # docker vars
 docker_registry: 192.168.130.1:5000
 kube_repo_prefix: "{{ docker_registry }}/google_containers"
-kube_hyperkube_image: "{{ docker_registry }}/google_containers/hyperkube:v1.9.0"
+kube_hyperkube_image: "{{ docker_registry }}/google_containers/hyperkube-amd64:v1.9.0"
 pod_infra_container_image: "{{ docker_registry }}/google_containers/pause-amd64:3.0"
 
 # k8s vars

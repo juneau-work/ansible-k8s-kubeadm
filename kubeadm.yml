@@ -1,8 +1,8 @@
 ---
 - hosts: 
+    - kubernetes-client
     - kubernetes-master
-    - kubernetes-worker
   roles:
-    - docker
+    - kubernetes-kubeadm
   vars_files: 
     - dev/group_vars/all
