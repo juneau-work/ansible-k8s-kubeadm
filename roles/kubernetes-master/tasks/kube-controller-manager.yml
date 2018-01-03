@@ -1,6 +1,9 @@
 ---
-- name: touch  /var/log/kube-controller-manager.log
-  command: touch /var/log/kube-controller-manager.log
+- name: touch /var/log/kube-controller-manager.log
+  file:
+    path: /var/log/kube-controller-manager.log
+    state: touch
+    mode: 0644
 
 - name: create kube-controller-manager
   template: 

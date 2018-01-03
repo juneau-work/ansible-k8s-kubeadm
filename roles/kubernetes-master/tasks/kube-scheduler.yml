@@ -1,6 +1,9 @@
 ---
 - name: touch /var/log/kube-scheduler.log
-  command: touch /var/log/kube-scheduler.log
+  file:
+    path: /var/log/kube-scheduler.log
+    state: touch
+    mode: 0644
 
 - name: create kube-scheduler
   template: 

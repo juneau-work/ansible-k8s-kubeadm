@@ -1,6 +1,9 @@
 ---
 - name: touch /var/log/kube-apiserver.log
-  command: touch /var/log/kube-apiserver.log
+  file:
+    path: /var/log/kube-apiserver.log
+    state: touch
+    mode: 0644
 
 - name: create kube-apiserver
   template: 
