@@ -1,67 +1,96 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  annotations:
-    scheduler.alpha.kubernetes.io/critical-pod: ""
-  creationTimestamp: null
-  labels:
-    component: kube-apiserver
-    tier: control-plane
   name: kube-apiserver
-  namespace: kube-system
 spec:
+  hostNetwork: true
   containers:
-  - command:
-    - /hyperkube
-    - apiserver
-    - --advertise-address=0.0.0.0
-    - --secure-port=6443 
-    - --etcd-servers={% for item in groups['etcd-node'] %}http://{{ hostvars[item]['ansible_host'] }}:2379{% if not loop.last %},{% endif %}{% endfor %} 
-    - --admission-control=Initializers,NamespaceLifecycle,LimitRanger,ServiceAccount,PersistentVolumeLabel,DefaultStorageClass,DefaultTolerationSeconds,NodeRestriction,ResourceQuota
-    - --service-cluster-ip-range={{ service_cluster_ip_range }}
-    - --client-ca-file=/etc/kubernetes/pki/ca.crt
-    - --basic-auth-file=/etc/kubernetes/pki/basic_auth.csv 
-    - --token-auth-file=/etc/kubernetes/pki/known_tokens.csv  
-    - --tls-cert-file=/etc/kubernetes/pki/server.crt 
-    - --tls-private-key-file=/etc/kubernetes/pki/server.key
-    - --allow-privileged=true
-    - --v=2
+  - name: kube-apiserver
     image: {{ kube_hyperkube_image }}
-    livenessProbe:
-      failureThreshold: 8
-      httpGet:
-        host: 127.0.0.1
-        path: /healthz
-        port: 6443
-        scheme: HTTPS
-      initialDelaySeconds: 15
-      timeoutSeconds: 15
-    name: kube-apiserver
-    resources:
-      requests:
-        cpu: 250m
+    command:
+    - /bin/sh
+    - -c
+    - /usr/local/bin/kube-apiserver 
+      --address=0.0.0.0 
+      --secure-port=443 
+      --etcd-servers={% for item in groups['etcd-node'] %}http://{{ hostvars[item]['ansible_host'] }}:2379{% if not loop.last %},{% endif %}{% endfor %} 
+      --admission-control=NamespaceLifecycle,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota
+      --service-cluster-ip-range={{ service_cluster_ip_range }}
+      --client-ca-file=/etc/kubernetes/pki/ca.crt
+      --basic-auth-file=/etc/kubernetes/pki/basic_auth.csv
+      --tls-cert-file=/etc/kubernetes/pki/server.crt 
+      --tls-private-key-file=/etc/kubernetes/pki/server.key
+      --token-auth-file=/etc/kubernetes/pki/known_tokens.csv  
+      --v=2
+      --allow-privileged=False 1>>/var/log/kube-apiserver.log 2>&1
+    ports:
+    - containerPort: 443
+      hostPort: 443
+      name: https
+    - containerPort: 7080
+      hostPort: 7080
+      name: http
+    - containerPort: 8080
+      hostPort: 8080
+      name: local
     volumeMounts:
     - mountPath: /etc/kubernetes
-      name: k8s
+      name: srvkube
       readOnly: true
-    - mountPath: /etc/ssl/certs
-      name: certs
-    - mountPath: /etc/pki
-      name: pki
     - mountPath: /var/log/kube-apiserver.log
       name: logfile
-  hostNetwork: true
+    - mountPath: /etc/ssl
+      name: etcssl
+      readOnly: true
+    - mountPath: /usr/share/ssl
+      name: usrsharessl
+      readOnly: true
+    - mountPath: /var/ssl
+      name: varssl
+      readOnly: true
+    - mountPath: /usr/ssl
+      name: usrssl
+      readOnly: true
+    - mountPath: /usr/lib/ssl
+      name: usrlibssl
+      readOnly: true
+    - mountPath: /usr/local/openssl
+      name: usrlocalopenssl
+      readOnly: true
+    - mountPath: /etc/openssl
+      name: etcopenssl
+      readOnly: true
+    - mountPath: /etc/pki/tls
+      name: etcpkitls
+      readOnly: true
   volumes:
   - hostPath:
       path: /etc/kubernetes
-    name: k8s
-  - hostPath:
-      path: /etc/ssl/certs
-    name: certs
-  - hostPath:
-      path: /etc/pki
-    name: pki
+    name: srvkube
   - hostPath:
       path: /var/log/kube-apiserver.log
     name: logfile
-status: {}
+  - hostPath:
+      path: /etc/ssl
+    name: etcssl
+  - hostPath:
+      path: /usr/share/ssl
+    name: usrsharessl
+  - hostPath:
+      path: /var/ssl
+    name: varssl
+  - hostPath:
+      path: /usr/ssl
+    name: usrssl
+  - hostPath:
+      path: /usr/lib/ssl
+    name: usrlibssl
+  - hostPath:
+      path: /usr/local/openssl
+    name: usrlocalopenssl
+  - hostPath:
+      path: /etc/openssl
+    name: etcopenssl
+  - hostPath:
+      path: /etc/pki/tls
+    name: etcpkitls

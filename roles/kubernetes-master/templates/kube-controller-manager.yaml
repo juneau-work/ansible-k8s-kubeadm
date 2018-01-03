@@ -1,62 +1,87 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  annotations:
-    scheduler.alpha.kubernetes.io/critical-pod: ""
-  creationTimestamp: null
-  labels:
-    component: kube-controller-manager
-    tier: control-plane
   name: kube-controller-manager
-  namespace: kube-system
 spec:
   containers:
-  - command:
-    - /hyperkube
-    - controller-manager
-    - --cluster-signing-cert-file=/etc/kubernetes/pki/ca.crt
-    - --address=127.0.0.1
-    - --leader-elect=true
-    - --controllers=*,bootstrapsigner,tokencleaner
-    - --root-ca-file=/etc/kubernetes/pki/ca.crt
-    - --use-service-account-credentials=true
-    - --kubeconfig=/etc/kubernetes/kubeconfig
-    - --service-account-private-key-file=/etc/kubernetes/pki/server.key
-    - --cluster-signing-key-file=/etc/kubernetes/pki/ca.key
-    - --allocate-node-cidrs=true
-    - --cluster-cidr={{ calico_ipv4pool_cidr }}
-    - --leader-elect=true
+  - name: kube-controller-manager
     image: {{ kube_hyperkube_image }}
+    command:
+    - /bin/sh
+    - -c
+    - /usr/local/bin/kube-controller-manager 
+      --master=127.0.0.1:8080
+      --cluster-cidr={{ calico_ipv4pool_cidr }}
+      --allocate-node-cidrs=true 
+      --service-account-private-key-file=/etc/kubernetes/pki/server.key
+      --v=2 
+      --leader-elect=true 1>>/var/log/kube-controller-manager.log 2>&1
     livenessProbe:
-      failureThreshold: 8
       httpGet:
-        host: 127.0.0.1
         path: /healthz
         port: 10252
-        scheme: HTTP
       initialDelaySeconds: 15
-      timeoutSeconds: 15
+      timeoutSeconds: 1
     name: kube-controller-manager
-    resources:
-      requests:
-        cpu: 200m
     volumeMounts:
     - mountPath: /etc/kubernetes
-      name: k8s
+      name: srvkube
       readOnly: true
-    - mountPath: /etc/ssl/certs
-      name: certs
-    - mountPath: /etc/pki
-      name: pki
+    - mountPath: /var/log/kube-controller-manager.log
+      name: logfile
+    - mountPath: /etc/ssl
+      name: etcssl
+      readOnly: true
+    - mountPath: /usr/share/ssl
+      name: usrsharessl
+      readOnly: true
+    - mountPath: /var/ssl
+      name: varssl
+      readOnly: true
+    - mountPath: /usr/ssl
+      name: usrssl
+      readOnly: true
+    - mountPath: /usr/lib/ssl
+      name: usrlibssl
+      readOnly: true
+    - mountPath: /usr/local/openssl
+      name: usrlocalopenssl
+      readOnly: true
+    - mountPath: /etc/openssl
+      name: etcopenssl
+      readOnly: true
+    - mountPath: /etc/pki/tls
+      name: etcpkitls
+      readOnly: true
   hostNetwork: true
   volumes:
   - hostPath:
       path: /etc/kubernetes
-    name: k8s
+    name: srvkube
   - hostPath:
-      path: /etc/ssl/certs
-    name: certs
+      path: /var/log/kube-controller-manager.log
+    name: logfile
   - hostPath:
-      path: /etc/pki
-    name: pki
-status: {}
+      path: /etc/ssl
+    name: etcssl
+  - hostPath:
+      path: /usr/share/ssl
+    name: usrsharessl
+  - hostPath:
+      path: /var/ssl
+    name: varssl
+  - hostPath:
+      path: /usr/ssl
+    name: usrssl
+  - hostPath:
+      path: /usr/lib/ssl
+    name: usrlibssl
+  - hostPath:
+      path: /usr/local/openssl
+    name: usrlocalopenssl
+  - hostPath:
+      path: /etc/openssl
+    name: etcopenssl
+  - hostPath:
+      path: /etc/pki/tls
+    name: etcpkitls
