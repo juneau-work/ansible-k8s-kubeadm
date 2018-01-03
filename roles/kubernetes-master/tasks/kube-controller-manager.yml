@@ -1,4 +1,7 @@
 ---
+- name: touch  /var/log/kube-controller-manager.log
+  command: touch /var/log/kube-controller-manager.log
+
 - name: create kube-controller-manager
   template: 
     src: kube-controller-manager.yaml

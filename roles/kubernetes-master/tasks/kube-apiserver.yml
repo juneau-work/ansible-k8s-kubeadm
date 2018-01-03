@@ -1,4 +1,7 @@
 ---
+- name: touch /var/log/kube-apiserver.log
+  command: touch /var/log/kube-apiserver.log
+
 - name: create kube-apiserver
   template: 
     src: kube-apiserver.yaml

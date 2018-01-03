@@ -1,4 +1,7 @@
 ---
+- name: touch /var/log/kube-scheduler.log
+  command: touch /var/log/kube-scheduler.log
+
 - name: create kube-scheduler
   template: 
     src: kube-scheduler.yaml
