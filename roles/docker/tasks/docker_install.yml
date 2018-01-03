@@ -22,10 +22,10 @@
   systemd:
     daemon-reload: yes
 
-- name: create /etc/docker/daemon.json
+- name: use overlay docker-storage
   copy:
-    src: daemon.json
-    dest: /etc/docker/daemon.json
+    src: docker-storage
+    dest: /etc/sysconfig/docker-storage
     owner: root
     group: root
     mode: 0644
