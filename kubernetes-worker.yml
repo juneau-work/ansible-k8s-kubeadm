@@ -1,8 +1,7 @@
 ---
 - hosts: 
-    - kubernetes-master
     - kubernetes-worker
   roles:
-    - kubernetes-kubeconfig
+    - kubernetes-worker
   vars_files: 
     - dev/group_vars/all

@@ -1,4 +1,6 @@
 ---
+- import_tasks: kubeconfig.yml
+  tags: kubeconfig
 - import_tasks: kube-apiserver.yml
   tags: kube-apiserver
 - import_tasks: kube-controller-manager.yml
