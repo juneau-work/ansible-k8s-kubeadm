@@ -12,7 +12,7 @@ spec:
     - -c
     - /usr/local/bin/kube-apiserver 
       --address=0.0.0.0 
-      --secure-port=443 
+      --secure-port={{ kubernetes_master_cluster_port }}
       --etcd-servers={% for item in groups['etcd-node'] %}http://{{ hostvars[item]['ansible_host'] }}:2379{% if not loop.last %},{% endif %}{% endfor %} 
       --admission-control=NamespaceLifecycle,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota
       --service-cluster-ip-range={{ service_cluster_ip_range }}
