@@ -6,4 +6,3 @@
 - import_playbook: kubelet.yml
 - import_playbook: kubernetes-client.yml
 - import_playbook: kubernetes-master.yml
-- import_playbook: kubernetes-worker.yml

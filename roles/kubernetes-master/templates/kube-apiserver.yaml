@@ -11,16 +11,19 @@ spec:
     - /bin/sh
     - -c
     - /usr/local/bin/kube-apiserver 
-      --address=0.0.0.0 
+      --insecure-bind-address=0.0.0.0
       --secure-port={{ kubernetes_master_cluster_port }}
       --etcd-servers={% for item in groups['etcd-node'] %}http://{{ hostvars[item]['ansible_host'] }}:2379{% if not loop.last %},{% endif %}{% endfor %} 
       --admission-control=NamespaceLifecycle,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota
       --service-cluster-ip-range={{ service_cluster_ip_range }}
-      --client-ca-file=/etc/kubernetes/pki/ca.crt
-      --basic-auth-file=/etc/kubernetes/pki/basic_auth.csv
-      --tls-cert-file=/etc/kubernetes/pki/server.crt 
-      --tls-private-key-file=/etc/kubernetes/pki/server.key
-      --token-auth-file=/etc/kubernetes/pki/known_tokens.csv  
+      --runtime-config=rbac.authorization.k8s.io/v1beta1
+      --authorization-mode=RBAC,Node
+      --enable-bootstrap-token-auth
+      --token-auth-file=/etc/kubernetes/pki/known_tokens.csv
+      --tls-cert-file=/etc/kubernetes/pki/kubernetes.pem
+      --tls-private-key-file=/etc/kubernetes/pki/kubernetes-key.pem
+      --client-ca-file=/etc/kubernetes/pki/k8s-root-ca.pem
+      --service-account-key-file=/etc/kubernetes/pki/k8s-root-ca-key.pem
       --v=2
       --allow-privileged=False 1>>/var/log/kube-apiserver.log 2>&1
     ports:
