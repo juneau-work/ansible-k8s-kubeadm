@@ -1,0 +1,8 @@
+---
+- name: create kube-proxy
+  template: 
+    src: kube-proxy.yaml
+    dest: /etc/kubernetes/manifests/kube-proxy.yaml
+    owner: root
+    group: root
+    mode: 0644

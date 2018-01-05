@@ -7,3 +7,5 @@
   tags: kube-controller-manager
 - import_tasks: kube-scheduler.yml
   tags: kube-scheduler
+- import_tasks: kube-proxy.yml
+  tags: kube-proxy
