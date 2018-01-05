@@ -17,7 +17,7 @@ spec:
       --admission-control=NamespaceLifecycle,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota
       --service-cluster-ip-range={{ service_cluster_ip_range }}
       --runtime-config=rbac.authorization.k8s.io/v1beta1
-      --authorization-mode=RBAC,Node
+      --authorization-mode=AlwaysAllow,RBAC,Node
       --enable-bootstrap-token-auth
       --token-auth-file=/etc/kubernetes/pki/known_tokens.csv
       --tls-cert-file=/etc/kubernetes/pki/kubernetes.pem
@@ -25,10 +25,10 @@ spec:
       --client-ca-file=/etc/kubernetes/pki/k8s-root-ca.pem
       --service-account-key-file=/etc/kubernetes/pki/k8s-root-ca-key.pem
       --v=2
-      --allow-privileged=False 1>>/var/log/kube-apiserver.log 2>&1
+      --allow-privileged=true 1>>/var/log/kube-apiserver.log 2>&1
     ports:
-    - containerPort: 443
-      hostPort: 443
+    - containerPort: 6443
+      hostPort: 6443
       name: https
     - containerPort: 7080
       hostPort: 7080

@@ -45,7 +45,7 @@ DNS.4 = kubernetes.default.svc.cluster
 DNS.5 = kubernetes.default.svc.cluster.local
 IP.1 = $CN
 IP.2 = 10.254.0.1
-IP.3 = 10.96.0.10
+IP.3 = 10.96.0.1
 
 [ v3_ext ]
 authorityKeyIdentifier=keyid,issuer:always
