@@ -11,7 +11,10 @@ spec:
     - /bin/sh
     - -c
     - /usr/local/bin/kube-apiserver 
-      --insecure-bind-address=0.0.0.0
+      --bind-address=0.0.0.0
+      --secure-port=443
+      --insecure-bind-address=127.0.0.1
+      --insecure-port=8080
       --secure-port={{ kubernetes_master_cluster_port }}
       --etcd-servers={% for item in groups['etcd-node'] %}http://{{ hostvars[item]['ansible_host'] }}:2379{% if not loop.last %},{% endif %}{% endfor %} 
       --admission-control=NamespaceLifecycle,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota
@@ -27,8 +30,8 @@ spec:
       --v=2
       --allow-privileged=true 1>>/var/log/kube-apiserver.log 2>&1
     ports:
-    - containerPort: 6443
-      hostPort: 6443
+    - containerPort: 443
+      hostPort: 443
       name: https
     - containerPort: 7080
       hostPort: 7080

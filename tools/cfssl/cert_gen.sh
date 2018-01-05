@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ -z "$KUBERNETES_APISERVER" ];then
-	echo "Usage: export KUBERNETES_APISERVER=https://192.168.130.11:6443"
+	echo "Usage: export KUBERNETES_APISERVER=https://192.168.130.11:443"
 	echo "bash $0"
 	exit 1
 fi
